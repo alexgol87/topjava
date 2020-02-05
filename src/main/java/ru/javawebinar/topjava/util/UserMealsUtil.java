@@ -22,7 +22,7 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         );
 
-        List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        List<UserMealWithExcess> mealsTo = filteredByLoops(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
 
         System.out.println("Realization with cycles:");
         mealsTo.forEach(System.out::println);
@@ -33,7 +33,7 @@ public class UserMealsUtil {
 
     }
 
-    public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<UserMealWithExcess> filteredByLoops(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         List<UserMealWithExcess> filteredListWithExcess = new ArrayList<>();
         Map<LocalDate, Integer> daysCalories = new HashMap<>();
 
