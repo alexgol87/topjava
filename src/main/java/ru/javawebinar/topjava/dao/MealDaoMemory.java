@@ -6,17 +6,16 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class MealDaoMemory implements MealDaoInterface {
 
     private static MealDaoMemory instance;
-    public static Map<Long, Meal> mealsMap;
+    private static Map<Long, Meal> mealsMap;
+    private static long index = 7;
 
 // TODO переделать логику счетчика, добавить подделку многопоточности
     private MealDaoMemory() {
-        //AtomicInteger counter = new AtomicInteger(0);
         mealsMap = MealsUtil.meals.stream()
                 .collect(Collectors.toMap(Meal::getId, meal -> meal));
     }
@@ -30,7 +29,7 @@ public class MealDaoMemory implements MealDaoInterface {
 
     @Override
     public void add(LocalDateTime dateTime, String description, int calories) {
-        mealsMap.put((long)mealsMap.size()+1, new Meal((long)mealsMap.size()+1, dateTime, description, calories));
+        mealsMap.put(index+1, new Meal(index+1, dateTime, description, calories));
     }
 
     @Override
