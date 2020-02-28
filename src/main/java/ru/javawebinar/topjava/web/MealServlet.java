@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.MealDaoMemory;
+import ru.javawebinar.topjava.dao.InMemoryRepository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -21,27 +21,27 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
 
     private static final Logger log = getLogger(MealServlet.class);
-    private static String INSERT_OR_EDIT = "/mealForm.jsp";
-    private static String LIST_MEAL = "/meals.jsp";
-    private static MealDaoMemory dao = MealDaoMemory.getInstance();
+    private static final String INSERT_OR_EDIT = "/mealForm.jsp";
+    private static final String LIST_MEAL = "/meals.jsp";
+    private static final InMemoryRepository repository = new InMemoryRepository();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String forward = LIST_MEAL;
         String action = request.getParameter("action");
-        request.setAttribute("mealToList", MealsUtil.getFilteredWithExcess(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
+        request.setAttribute("mealToList", MealsUtil.getFilteredWithExcess(repository.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
 
         if (action != null) {
             if (action.equalsIgnoreCase("delete") && request.getParameter("id") != null) {
                 long id = Long.parseLong(request.getParameter("id"));
-                dao.delete(id);
+                repository.delete(id);
                 log.debug("DELETE meal id={}", id);
                 log.debug("redirect to meals");
                 response.sendRedirect("meals");
             } else if (action.equalsIgnoreCase("edit") && request.getParameter("id") != null) {
                 forward = INSERT_OR_EDIT;
                 long id = Long.parseLong(request.getParameter("id"));
-                Meal meal = dao.getById(id);
+                Meal meal = repository.getById(id);
                 request.setAttribute("meal", meal);
                 log.debug("forward to EDIT");
             } else if (action.equalsIgnoreCase("add")) {
@@ -61,13 +61,13 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
-            dao.add(LocalDateTime.parse(request.getParameter("dateTime"), formatter), request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
+            repository.add(LocalDateTime.parse(request.getParameter("dateTime"), formatter), request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
         } else {
-            dao.update(Long.parseLong(request.getParameter("id")), LocalDateTime.parse(request.getParameter("dateTime"), formatter), request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
+            repository.update(Long.parseLong(request.getParameter("id")), LocalDateTime.parse(request.getParameter("dateTime"), formatter), request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
         }
 
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEAL);
-        request.setAttribute("mealToList", MealsUtil.getFilteredWithExcess(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
+        request.setAttribute("mealToList", MealsUtil.getFilteredWithExcess(repository.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
         view.forward(request, response);
     }
 }

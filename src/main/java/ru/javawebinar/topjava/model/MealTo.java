@@ -50,5 +50,5 @@ public class MealTo {
 
     public long getId() {
         return this.id;
-   }
+    }
 }
