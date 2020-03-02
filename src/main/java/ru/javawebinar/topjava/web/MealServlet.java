@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.InMemoryRepository;
+import ru.javawebinar.topjava.dao.InMemoryMealRepository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -23,7 +23,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final String INSERT_OR_EDIT = "/mealForm.jsp";
     private static final String LIST_MEAL = "/meals.jsp";
-    private static final InMemoryRepository repository = new InMemoryRepository();
+    private static final InMemoryMealRepository repository = new InMemoryMealRepository();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class InMemoryRepository implements MealRepository {
+public class InMemoryMealRepository implements MealRepository {
 
     private static final ConcurrentMap<Long, Meal> mealsMap;
     private static final AtomicInteger counter = new AtomicInteger(7);
@@ -37,9 +37,7 @@ public class InMemoryRepository implements MealRepository {
 
     @Override
     public void delete(long id) {
-        if (mealsMap.containsKey(id)) {
-            mealsMap.remove(id);
-        }
+        mealsMap.remove(id);
     }
 
     @Override
